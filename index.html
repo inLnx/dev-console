@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="index.js"></script>
+        <title>DEVC Console</title>    
+    </head>
+        <body>  
+            <h1>WIP(Work in progress)</h1>
+
+                <input type="text" id="username" placeholder="GitHub Username">
+<button onclick="getUserRepos()">Get Repositories</button>
+<div id="repoList"></div><script>
+function getUserRepos() {
+    var username = document.getElementById('username').value;
+    var request = new XMLHttpRequest();
+    request.open('GET', 'https://api.github.com/users/' + username + '/repos', true);
+
+    request.onload = function() {
+        if (this.status >= 200 && this.status < 400) {
+            // Success!
+            var repos = JSON.parse(this.response);
+            var output = '<ul>';
+            for(var i = 0; i < repos.length; i++) {
+                output += '<li><a href="' + repos[i].html_url + '" target="_blank">' + repos[i].name + '</a></li>';
+            }
+            output += '</ul>';
+            document.getElementById('repoList').innerHTML = output;
+        } else {
+            // We reached our target server, but it returned an error
+            console.error('Error fetching userdata');
+        }
+    };
+
+    request.onerror = function() {
+        // There was a connection error of some sort
+        console.error('Connection error');
+    };
+
+    request.send();
+}
+</script>
+
+
+            </body>
+            </html>
